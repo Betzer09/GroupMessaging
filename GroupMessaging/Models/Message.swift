@@ -8,6 +8,7 @@
 
 import Foundation
 import MessageKit
+import CoreLocation
 
 /**
  A message that is being sent to a user
@@ -30,15 +31,38 @@ struct Message: MessageType {
     var sentDate: Date
     var kind: MessageKind
     
-    init(kind: MessageKind, sender: GMUser, sendDate: Date = Date(), messageId: String = UUID().uuidString, conversationID: String) {
-        self.sender = sender
+    private init(kind: MessageKind, user: GMUser) {
         self.kind = kind
-        self.conversationID = conversationID
-        self.sentDate = sendDate
-        self.messageId = messageId
+        self.sender = user
+        self.messageId = UUID().uuidString
+        self.sentDate = Date()
+        self.conversationID = UUID().uuidString
+    }
+    
+    // MARK: - Custom Inits
+    init(location: CLLocation, user: GMUser) {
+        let locationItem = CoordinateItem(location: location)
+        self.init(kind: .location(locationItem), user: user)
+    }
+    
+    init(text: String, user: GMUser) {
+        self.init(kind: .text(text), user: user)
     }
     
     init?(dict: [String: Any]) {
         return nil
     }
+}
+
+// MARK: - Custom Messaging Types
+private struct CoordinateItem: LocationItem {
+
+    var location: CLLocation
+    var size: CGSize
+
+    init(location: CLLocation) {
+        self.location = location
+        self.size = CGSize(width: 240, height: 240)
+    }
+
 }

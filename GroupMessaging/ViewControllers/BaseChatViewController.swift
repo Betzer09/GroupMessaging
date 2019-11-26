@@ -11,32 +11,24 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 
-class ChatViewController: MessagesViewController, MessagesDataSource {
+class BaseChatViewController: MessagesViewController {
     
+    // MARK: - Properties
     fileprivate var messageList = [Message]()
-    
-    func currentSender() -> SenderType {
-        return GMMockData.shared.currentSender
-    }
-    
-    func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        return messageList[indexPath.section]
-    }
-    
-    func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-        return messageList.count
-    }
-    
+    let refreshControl = UIRefreshControl()
     
     // MARK: - Properties
     
     // MARK: - View Life Cycle
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configureMessageCollectionView()
+        configureMessageInputBar()
+        
+        // TODO: Load inital messages
+//        loadFirstMessages()
     }
     
     // MARK: - Actions
@@ -52,8 +44,8 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
         scrollsToBottomOnKeyboardBeginsEditing = true // default false
         maintainPositionOnKeyboardFrameChanged = true // default false
         
-//        messagesCollectionView.addSubview(refreshControl)
-//        refreshControl.addTarget(self, action: #selector(loadMoreMessages), for: .valueChanged)
+        messagesCollectionView.addSubview(refreshControl)
+        refreshControl.addTarget(self, action: #selector(loadMoreMessages), for: .valueChanged)
     }
     
     func configureMessageInputBar() {
@@ -65,10 +57,38 @@ class ChatViewController: MessagesViewController, MessagesDataSource {
             for: .highlighted
         )
     }
+    
+    @objc
+    func loadMoreMessages() {
+//        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 1) {
+//            SampleData.shared.getMessages(count: 20) { messages in
+//                DispatchQueue.main.async {
+//                    self.messageList.insert(contentsOf: messages, at: 0)
+//                    self.messagesCollectionView.reloadDataAndKeepOffset()
+//                    self.refreshControl.endRefreshing()
+//                }
+//            }
+//        }
+    }
+}
+
+// MARK: - MessagesDataSource
+extension BaseChatViewController: MessagesDataSource {
+    func currentSender() -> SenderType {
+        return GMMockData.shared.currentSender
+    }
+    
+    func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
+        return messageList[indexPath.section]
+    }
+    
+    func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
+        return messageList.count
+    }
 }
 
 // MARK: - MessageLabelDelegate
-extension ChatViewController: MessageCellDelegate {
+extension BaseChatViewController: MessageCellDelegate {
     func didSelectAddress(_ addressComponents: [String: String]) {
            print("Address Selected: \(addressComponents)")
        }
@@ -103,7 +123,7 @@ extension ChatViewController: MessageCellDelegate {
 }
 
 // MARK: - InputBarAccessoryViewDelegate
-extension ChatViewController: InputBarAccessoryViewDelegate {
+extension BaseChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
 
         // Here we can parse for which substrings were autocompleted
@@ -123,12 +143,14 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         // Send button activity animation
         messageInputBar.sendButton.startAnimating()
         messageInputBar.inputTextView.placeholder = "Sending..."
+        
+        // TODO: Setup networking task
         DispatchQueue.global(qos: .default).async {
             // fake send request task
             sleep(1)
             DispatchQueue.main.async { [weak self] in
                 self?.messageInputBar.sendButton.stopAnimating()
-                self?.messageInputBar.inputTextView.placeholder = "Aa"
+                self?.messageInputBar.inputTextView.placeholder = "Send Message"
                 self?.insertMessages(components)
                 self?.messagesCollectionView.scrollToBottom(animated: true)
             }
@@ -159,15 +181,14 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         })
     }
 
-
     private func insertMessages(_ data: [Any]) {
-//        for component in data {
-//            let user = GMMockData.shared.currentSender
-//            if let str = component as? String {
-//                let message = Message(kind: .text("Foobar"), sender: GMMockData.shared.currentSender, conversationID: "foo")
-//                insertMessage(message)
-//            }
-//        }
+        for component in data {
+            let user = GMMockData.shared.currentSender
+            if let str = component as? String {
+                let message = Message(text: str, user: user)
+                insertMessage(message)
+            }
+        }
     }
 
 }

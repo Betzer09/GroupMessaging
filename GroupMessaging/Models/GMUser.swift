@@ -15,6 +15,7 @@ class GMUser: NSObject, SenderType {
     // MARK: - Properties
     @objc fileprivate(set) var fullname: String
     @objc fileprivate(set) var firebaseID: String
+    
     // Sender Type Protocal
     var senderId: String
     var displayName: String
@@ -40,7 +41,7 @@ class GMUser: NSObject, SenderType {
     }
     
     /// Sets the values to name, lat, long, and status so we don't have to create a whole new isntance of buddy
-    func setIncomingChanging(dict: [String: Any]) {
+    func setIncomingChanges(dict: [String: Any]) {
         guard let name = dict[FirebaseManager.DBKeys.fullname] as? String,
             let firebaseID = dict[FirebaseManager.DBKeys.firebaseID] as? String else {
                 print("Failed to parse buddy"); return
@@ -48,7 +49,8 @@ class GMUser: NSObject, SenderType {
         
         self.fullname = name
         self.firebaseID = firebaseID
-        
+        self.senderId = firebaseID
+        self.displayName = fullname
     }
     
     /// Helps you find this specific instance of a buddy
