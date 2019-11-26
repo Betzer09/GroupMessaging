@@ -7,17 +7,24 @@
 //
 
 import Foundation
+import MessageKit
 
-@objc class Buddy: NSObject {
+@objc
+class GMUser: NSObject, SenderType {
     
     // MARK: - Properties
     @objc fileprivate(set) var fullname: String
     @objc fileprivate(set) var firebaseID: String
+    // Sender Type Protocal
+    var senderId: String
+    var displayName: String
     
     // MARK: - Init
     init(firebaseID: String, fullname: String) {
         self.firebaseID = firebaseID
         self.fullname = fullname
+        self.senderId = firebaseID
+        self.displayName = fullname
     }
     
     init?(dict: [String: Any]) {
@@ -28,6 +35,8 @@ import Foundation
     
         self.firebaseID = firebaseID
         self.fullname = fullname
+        self.senderId = firebaseID
+        self.displayName = fullname
     }
     
     /// Sets the values to name, lat, long, and status so we don't have to create a whole new isntance of buddy
@@ -43,20 +52,10 @@ import Foundation
     }
     
     /// Helps you find this specific instance of a buddy
-    static func ==(lhs: Buddy, rhs: Buddy) -> Bool {
+    static func ==(lhs: GMUser, rhs: GMUser) -> Bool {
         return lhs.firebaseID == rhs.firebaseID
     }
 }
 
-extension Buddy {
-    static let buddiesKey = "buddies"
-}
-
-// MARK: - Notificaiton observers
-public extension NSNotification {
-    @objc static let buddyLocationChange = Notification.Name("buddyLocationChange")
-    @objc static let stopObservingBuddies = Notification.Name("stopObservingBuddies")
-    @objc static let centerOnBuddyInMap = Notification.Name("centerOnBuddyInMap")
-}
 
 

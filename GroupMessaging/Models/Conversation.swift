@@ -15,12 +15,12 @@ import Foundation
     /// The unique converstaion ID
     @objc let id: String
     /// Buddies that are currently in the conversation
-    private var buddies: [Buddy]
+    private var buddies: [GMUser]
     /// Messages that have been sent in the conversation
     var messages: [Message]
     
     // MARK: - Init
-    init(id: String, buddies: [Buddy], messages: [Message]) {
+    init(id: String, buddies: [GMUser], messages: [Message]) {
         self.id = id
         self.buddies = buddies
         self.messages = messages
@@ -33,7 +33,7 @@ import Foundation
             let messages = dict[FirebaseManager.DBKeys.message] as? [[String: Any]] else {return nil}
 
         self.id = conversationID
-        self.buddies = buddies.compactMap({ Buddy(dict: $0) })
+        self.buddies = buddies.compactMap({ GMUser(dict: $0) })
         self.messages = messages.compactMap({ Message(dict: $0)})
     }
 }
