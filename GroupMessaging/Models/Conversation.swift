@@ -13,28 +13,47 @@ import Foundation
     // MARK: - Propeties
     
     /// The unique converstaion ID
-    @objc let id: String
+    @objc let conversationID: String
     /// Buddies that are currently in the conversation
-    private var buddies: [GMUser]
+    private(set) var groupMembers: [GMUser]
     /// Messages that have been sent in the conversation
-    var messages: [Message]
+    var messages: [Message] = []
+    
+    var jsonDict: [String: Any] {
+        let messageDict = messages.compactMap({ $0.jsonDict })
+        let groupMembersDict: [[String: Any]] = groupMembers.compactMap({ $0.jsonDict })
+        
+        return [
+            FirebaseManager.DBKeys.messages: messageDict,
+            FirebaseManager.DBKeys.members: groupMembersDict,
+            FirebaseManager.DBKeys.conversationID: conversationID
+        ]
+    }
     
     // MARK: - Init
-    init(id: String, buddies: [GMUser], messages: [Message]) {
-        self.id = id
-        self.buddies = buddies
-        self.messages = messages
+    init(groupMembers: [GMUser]) {
+        self.conversationID = UUID().uuidString
+        self.groupMembers = groupMembers
     }
 
     // MARK: - Init?
     init?(dict: [String: Any]) {
         guard let conversationID = dict[FirebaseManager.DBKeys.conversationID] as? String,
-            let buddies = dict[FirebaseManager.DBKeys.conversationID] as? [[String: Any]],
-            let messages = dict[FirebaseManager.DBKeys.message] as? [[String: Any]] else {return nil}
+            let groupMembers = dict[FirebaseManager.DBKeys.members] as? [[String: Any]] else {
+                print("Failed to parse conversation")
+                return nil
+        }
 
-        self.id = conversationID
-        self.buddies = buddies.compactMap({ GMUser(dict: $0) })
-        self.messages = messages.compactMap({ Message(dict: $0)})
+        self.conversationID = conversationID
+        self.groupMembers = groupMembers.compactMap({ GMUser(dict: $0)})
+        
+        
+        if let messages = dict[FirebaseManager.DBKeys.message] as? [[String: Any]] {
+            self.messages = messages.compactMap({ Message(dict: $0)})
+        } else {
+            self.messages = []
+        }
+        
     }
 }
 

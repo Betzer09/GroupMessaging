@@ -14,24 +14,30 @@ import CoreLocation
  A message that is being sent to a user
  */
 struct Message: MessageType {
+    
     struct DBKeys {
         static let textKey = "text"
         static let senderNameKey = "sender_name"
         static let senderIDKey = "sender_id"
         static let conversationIDKey = "conversation_id"
-        static let sendByKey = "seen_by"
+        static let sendDateKey = "sent_date"
+        static let seenByKey = "seen_by"
+        static let messageID = "message_id"
+        static let messageType = "message_type"
     }
     
     /// The ID of the conversation that the message belongs too.
     let conversationID: String
     
     // MARK: - Message Type Protocal
+    
     var sender: SenderType
     var messageId: String
     var sentDate: Date
     var kind: MessageKind
+    var text: String?
     
-    private init(kind: MessageKind, user: GMUser) {
+    private init(kind: MessageKind, user: GMUser, text: String? = nil) {
         self.kind = kind
         self.sender = user
         self.messageId = UUID().uuidString
@@ -46,11 +52,37 @@ struct Message: MessageType {
     }
     
     init(text: String, user: GMUser) {
-        self.init(kind: .text(text), user: user)
+        self.init(kind: .text(text), user: user, text: text)
     }
     
+    
+    // MARK: - Failable Init
+    
     init?(dict: [String: Any]) {
-        return nil
+        guard let senderName = dict[DBKeys.senderNameKey] as? String,
+            let senderID = dict[DBKeys.senderNameKey] as? String,
+            let conversationID = dict[DBKeys.senderNameKey] as? String,
+            let sentDate = dict[DBKeys.senderNameKey] as? String,
+            let messageId = dict[DBKeys.messageID] as? String,
+            let text = dict[DBKeys.textKey] as? String
+            else {return nil}
+        
+        self.sender = GMUser(firebaseID: senderID, fullname: senderName)
+        self.conversationID = conversationID
+        self.sentDate = sentDate.toDate()
+        self.messageId = messageId
+        self.kind = .text(text)
+    }
+    
+    var jsonDict: [String: Any] {
+        [
+            DBKeys.senderNameKey: self.sender.displayName,
+            DBKeys.senderIDKey: self.sender.senderId,
+            DBKeys.textKey: self.text as Any,
+            DBKeys.conversationIDKey: self.conversationID,
+            DBKeys.sendDateKey: self.sentDate.toString(),
+            DBKeys.messageType: "\(self.kind)"
+        ]
     }
 }
 

@@ -19,6 +19,18 @@ class GMUser: NSObject, SenderType {
     // Sender Type Protocal
     var senderId: String
     var displayName: String
+    var initals: String {
+        get {
+            displayName.getInitals()
+        }
+    }
+    
+    var jsonDict: [String: Any] {
+        return [
+            FirebaseManager.DBKeys.fullname: self.fullname,
+            FirebaseManager.DBKeys.firebaseID: self.firebaseID
+        ]
+    }
     
     // MARK: - Init
     init(firebaseID: String, fullname: String) {
@@ -31,7 +43,6 @@ class GMUser: NSObject, SenderType {
     init?(dict: [String: Any]) {
         guard let fullname = dict[FirebaseManager.DBKeys.fullname] as? String,
               let firebaseID = dict[FirebaseManager.DBKeys.firebaseID] as? String
-                
               else {print("Failed to parse buddy with data: \(dict)"); return nil}
     
         self.firebaseID = firebaseID

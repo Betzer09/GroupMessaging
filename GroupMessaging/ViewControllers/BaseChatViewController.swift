@@ -18,9 +18,10 @@ class BaseChatViewController: MessagesViewController {
     let refreshControl = UIRefreshControl()
     
     // MARK: - Properties
+    /// The conversation to fetch
+    var conversation: Conversation?
     
     // MARK: - View Life Cycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,7 +29,14 @@ class BaseChatViewController: MessagesViewController {
         configureMessageInputBar()
         
         // TODO: Load inital messages
-//        loadFirstMessages()
+        loadFirstMessages()
+    }
+    
+    func loadFirstMessages() {
+        guard let conversation = conversation else {fatalError("Failed to find conversation ID")}
+        
+        
+        
     }
     
     // MARK: - Actions
