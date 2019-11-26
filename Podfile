@@ -10,6 +10,8 @@ target 'GroupMessaging' do
 
     pod 'Firebase/Database'
     pod 'Firebase'
+    pod 'MessageKit'
+    
 
 
 end
