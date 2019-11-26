@@ -20,6 +20,8 @@
 		230C28BF238DB4470013814B /* GMMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230C28BE238DB4470013814B /* GMMockData.swift */; };
 		230C28C2238DB9910013814B /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230C28C1238DB9910013814B /* UIColor.swift */; };
 		230C28CB238DC6320013814B /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230C28CA238DC6320013814B /* BaseChatViewController.swift */; };
+		230C28CD238DC6540013814B /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230C28CC238DC6540013814B /* ChatViewController.swift */; };
+		230C28CF238DC8420013814B /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230C28CE238DC8420013814B /* UIView.swift */; };
 		856A2F846D23B28EB4391674 /* Pods_GroupMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 602D91F53543CBFEFB6605C1 /* Pods_GroupMessaging.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +41,8 @@
 		230C28BE238DB4470013814B /* GMMockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMMockData.swift; sourceTree = "<group>"; };
 		230C28C1238DB9910013814B /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		230C28CA238DC6320013814B /* BaseChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseChatViewController.swift; sourceTree = "<group>"; };
+		230C28CC238DC6540013814B /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		230C28CE238DC8420013814B /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		602D91F53543CBFEFB6605C1 /* Pods_GroupMessaging.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GroupMessaging.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		861C6C399E13266F2E4507FC /* Pods-GroupMessaging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupMessaging.release.xcconfig"; path = "Target Support Files/Pods-GroupMessaging/Pods-GroupMessaging.release.xcconfig"; sourceTree = "<group>"; };
 		DEC1915D4A74BD07EFA167A9 /* Pods-GroupMessaging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupMessaging.debug.xcconfig"; path = "Target Support Files/Pods-GroupMessaging/Pods-GroupMessaging.debug.xcconfig"; sourceTree = "<group>"; };
@@ -131,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				230C28CA238DC6320013814B /* BaseChatViewController.swift */,
+				230C28CC238DC6540013814B /* ChatViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -155,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				230C28C1238DB9910013814B /* UIColor.swift */,
+				230C28CE238DC8420013814B /* UIView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -294,12 +300,14 @@
 			files = (
 				230C28B5238DA9FC0013814B /* Conversation.swift in Sources */,
 				230C28B2238DA9E60013814B /* Message.swift in Sources */,
+				230C28CF238DC8420013814B /* UIView.swift in Sources */,
 				230C28B7238DAA110013814B /* FirebaseManager.swift in Sources */,
 				230C28BF238DB4470013814B /* GMMockData.swift in Sources */,
 				230C28C2238DB9910013814B /* UIColor.swift in Sources */,
 				230C2891238DA8050013814B /* AppDelegate.swift in Sources */,
 				230C28B9238DAB460013814B /* GMUser.swift in Sources */,
 				230C28CB238DC6320013814B /* BaseChatViewController.swift in Sources */,
+				230C28CD238DC6540013814B /* ChatViewController.swift in Sources */,
 				230C2893238DA8050013814B /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
