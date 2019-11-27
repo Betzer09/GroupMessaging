@@ -70,7 +70,7 @@ class BaseChatViewController: MessagesViewController {
             }
             
             let sortedMessages = allmessages.sorted(by: { $0.sentDate < $1.sentDate })
-            strongSelf.messageList.append(contentsOf: sortedMessages)
+            strongSelf.messageList = sortedMessages
             strongSelf.messagesCollectionView.reloadData()
             strongSelf.messagesCollectionView.scrollToBottom()
         }
@@ -106,6 +106,7 @@ class BaseChatViewController: MessagesViewController {
     @objc
     func loadMoreMessages() {
         // TODO: Setup Pagination
+        refreshControl.endRefreshing()
     }
 }
 
