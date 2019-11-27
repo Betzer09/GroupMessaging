@@ -24,6 +24,7 @@
 		230C28CF238DC8420013814B /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230C28CE238DC8420013814B /* UIView.swift */; };
 		230C28D1238DD08A0013814B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230C28D0238DD08A0013814B /* String.swift */; };
 		230C28D5238DDA2E0013814B /* ConversationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230C28D4238DDA2E0013814B /* ConversationTableView.swift */; };
+		230C28D7238DF4400013814B /* NotificaitonsName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230C28D6238DF4400013814B /* NotificaitonsName.swift */; };
 		856A2F846D23B28EB4391674 /* Pods_GroupMessaging.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 602D91F53543CBFEFB6605C1 /* Pods_GroupMessaging.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +48,7 @@
 		230C28CE238DC8420013814B /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		230C28D0238DD08A0013814B /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		230C28D4238DDA2E0013814B /* ConversationTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableView.swift; sourceTree = "<group>"; };
+		230C28D6238DF4400013814B /* NotificaitonsName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificaitonsName.swift; sourceTree = "<group>"; };
 		602D91F53543CBFEFB6605C1 /* Pods_GroupMessaging.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GroupMessaging.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		861C6C399E13266F2E4507FC /* Pods-GroupMessaging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupMessaging.release.xcconfig"; path = "Target Support Files/Pods-GroupMessaging/Pods-GroupMessaging.release.xcconfig"; sourceTree = "<group>"; };
 		DEC1915D4A74BD07EFA167A9 /* Pods-GroupMessaging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupMessaging.debug.xcconfig"; path = "Target Support Files/Pods-GroupMessaging/Pods-GroupMessaging.debug.xcconfig"; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				230C28C1238DB9910013814B /* UIColor.swift */,
 				230C28CE238DC8420013814B /* UIView.swift */,
 				230C28D0238DD08A0013814B /* String.swift */,
+				230C28D6238DF4400013814B /* NotificaitonsName.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 				230C28B5238DA9FC0013814B /* Conversation.swift in Sources */,
 				230C28D5238DDA2E0013814B /* ConversationTableView.swift in Sources */,
 				230C28B2238DA9E60013814B /* Message.swift in Sources */,
+				230C28D7238DF4400013814B /* NotificaitonsName.swift in Sources */,
 				230C28CF238DC8420013814B /* UIView.swift in Sources */,
 				230C28B7238DAA110013814B /* FirebaseManager.swift in Sources */,
 				230C28BF238DB4470013814B /* GMMockData.swift in Sources */,
@@ -464,6 +468,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RE524LJXV2;
 				INFOPLIST_FILE = GroupMessaging/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -483,6 +488,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RE524LJXV2;
 				INFOPLIST_FILE = GroupMessaging/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

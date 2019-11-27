@@ -13,6 +13,7 @@ extension String {
     func toDate() -> Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d, h:mm a"
+        
         return dateFormatter.date(from: self)!
     }
     

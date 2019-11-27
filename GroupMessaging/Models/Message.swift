@@ -35,24 +35,25 @@ struct Message: MessageType {
     var messageId: String
     var sentDate: Date
     var kind: MessageKind
-    var text: String?
+    private(set) var text: String?
     
-    private init(kind: MessageKind, user: GMUser, text: String? = nil) {
+    private init(kind: MessageKind, user: GMUser, text: String? = nil, conversationID: String) {
         self.kind = kind
         self.sender = user
         self.messageId = UUID().uuidString
         self.sentDate = Date()
-        self.conversationID = UUID().uuidString
+        self.conversationID = conversationID
     }
     
     // MARK: - Custom Inits
-    init(location: CLLocation, user: GMUser) {
+    init(location: CLLocation, user: GMUser, conversationID: String) {
         let locationItem = CoordinateItem(location: location)
-        self.init(kind: .location(locationItem), user: user)
+        self.init(kind: .location(locationItem), user: user, conversationID: conversationID)
     }
     
-    init(text: String, user: GMUser) {
-        self.init(kind: .text(text), user: user, text: text)
+    init(text: String, user: GMUser, conversationID: String) {
+        self.init(kind: .text(text), user: user, text: text, conversationID: conversationID)
+        self.text = text
     }
     
     
@@ -60,12 +61,12 @@ struct Message: MessageType {
     
     init?(dict: [String: Any]) {
         guard let senderName = dict[DBKeys.senderNameKey] as? String,
-            let senderID = dict[DBKeys.senderNameKey] as? String,
-            let conversationID = dict[DBKeys.senderNameKey] as? String,
-            let sentDate = dict[DBKeys.senderNameKey] as? String,
+            let senderID = dict[DBKeys.senderIDKey] as? String,
+            let conversationID = dict[DBKeys.conversationIDKey] as? String,
+            let sentDate = dict[DBKeys.sendDateKey] as? String,
             let messageId = dict[DBKeys.messageID] as? String,
             let text = dict[DBKeys.textKey] as? String
-            else {return nil}
+            else {print("Failed to parse message!"); return nil}
         
         self.sender = GMUser(firebaseID: senderID, fullname: senderName)
         self.conversationID = conversationID
@@ -79,9 +80,10 @@ struct Message: MessageType {
             DBKeys.senderNameKey: self.sender.displayName,
             DBKeys.senderIDKey: self.sender.senderId,
             DBKeys.textKey: self.text as Any,
+            DBKeys.messageID: self.messageId,
             DBKeys.conversationIDKey: self.conversationID,
             DBKeys.sendDateKey: self.sentDate.toString(),
-            DBKeys.messageType: "\(self.kind)"
+            DBKeys.messageType: "text",
         ]
     }
 }

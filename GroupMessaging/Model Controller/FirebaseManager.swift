@@ -47,27 +47,47 @@ class FirebaseManager {
         })
     }
     
-    static func sendMessage(converstaionID: String, message: Message) {
-        conversationsRef?.child(converstaionID).setValue(message.jsonDict, withCompletionBlock: { (error, _) in
+    static func sendMessage(converstaionID: String, message: Message, completion: @escaping() -> ()) {
+        conversationsRef?.child(converstaionID).child("messages").child(message.messageId).setValue(message.jsonDict, withCompletionBlock: { (error, _) in
             
             if let error = error {
                 print("Failed to send message with error: \(error.localizedDescription)")
             } else {
-                print("Succesfully created converstion")
+                print("Succesfully send message")
             }
+            
+             completion()
         })
     }
     
-    static func fetchConversationMessages(initalIndex: Int, limit: Int, conversationID: String) {
-        conversationsRef?.child(conversationID).observe(.value, with: { (snapshot) in
-            guard let data = snapshot.value as? [[String: Any]] else {return}
-            
-            for conversationJson in data {
-                guard let conversation = Conversation(dict: conversationJson) else {continue}
-                
+//    static func fetchConversationMessages(initalIndex: Int, limit: Int,
+//                                          conversationID: String, completion: @escaping(_ response: [[String: Any]]) -> ()) {
+//        conversationsRef?.child(conversationID).child("messages")
+//            .queryOrdered(byChild: "sent_date")
+//            .observeSingleEvent(of: .value, with: { (snapshot) in
+//            guard let data = snapshot.value as? [String: Any] else {
+//                completion([[:]])
+//                return
+//            }
+//
+//            let messages = data.compactMap({ $0.value as? [String: Any]})
+//
+//            completion(messages)
+//
+//        })
+//    }
+    
+    static func observeNewMessages(conversationID: String, completion: @escaping(_ response: [[String: Any]]) -> ()) {
+        conversationsRef?.child(conversationID).child("messages")
+            .observe(.value, with: { (snapshot) in
+            guard let data = snapshot.value as? [String: Any] else {
+                completion([[:]])
+                return
             }
             
+            let messages = data.compactMap({ $0.value as? [String: Any]})
             
+            completion(messages)
         })
     }
     

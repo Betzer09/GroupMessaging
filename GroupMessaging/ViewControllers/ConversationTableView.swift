@@ -68,7 +68,6 @@ class ConversationTableView: UITableViewController {
         if segue.identifier == "toMessage" {
             guard let vc = segue.destination as? ChatViewController else {return}
             vc.conversation = selectedConversation
-            
         }
     }
     

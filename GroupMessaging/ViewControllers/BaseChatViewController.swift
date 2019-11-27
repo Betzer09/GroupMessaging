@@ -14,12 +14,18 @@ import InputBarAccessoryView
 class BaseChatViewController: MessagesViewController {
     
     // MARK: - Properties
-    fileprivate var messageList = [Message]()
+    fileprivate(set) var messageList = [Message]() {
+        didSet {
+            print("\(messageList.count) messages were added")
+        }
+    }
     let refreshControl = UIRefreshControl()
     
     // MARK: - Properties
     /// The conversation to fetch
-    var conversation: Conversation?
+    var conversation: Conversation! // Should crash if we don't have a conversation
+    private var conversationObserver: UInt?
+    
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -28,15 +34,46 @@ class BaseChatViewController: MessagesViewController {
         configureMessageCollectionView()
         configureMessageInputBar()
         
-        // TODO: Load inital messages
-        loadFirstMessages()
+//        loadFirstMessages()
+        loadIncomingMessages()
     }
     
-    func loadFirstMessages() {
-        guard let conversation = conversation else {fatalError("Failed to find conversation ID")}
-        
-        
-        
+//    func loadFirstMessages() {
+//        FirebaseManager.fetchConversationMessages(initalIndex: 0, limit: 20, conversationID: conversation.conversationID) { [weak self] (response) in
+//
+//            guard let strongSelf = self else {return}
+//
+//            var allmessages = [Message]()
+//            for messageJson in response {
+//                guard let messsage = Message(dict: messageJson) else {continue}
+//                allmessages.append(messsage)
+//            }
+//
+//            strongSelf.messageList = allmessages
+//            strongSelf.messagesCollectionView.reloadData()
+//            strongSelf.messagesCollectionView.scrollToBottom()
+//        }
+//    }
+     
+    /**
+     Handles new incomming messages
+     */
+    func loadIncomingMessages() {
+        FirebaseManager.observeNewMessages(conversationID: conversation.conversationID) { [weak self] (response) in
+            guard let strongSelf = self else {return}
+            
+            var allmessages = [Message]()
+            for messageJson in response {
+                guard let messsage = Message(dict: messageJson) else {continue}
+                // Don't reload current user's message
+                allmessages.append(messsage)
+            }
+            
+            let sortedMessages = allmessages.sorted(by: { $0.sentDate < $1.sentDate })
+            strongSelf.messageList.append(contentsOf: sortedMessages)
+            strongSelf.messagesCollectionView.reloadData()
+            strongSelf.messagesCollectionView.scrollToBottom()
+        }
     }
     
     // MARK: - Actions
@@ -68,22 +105,14 @@ class BaseChatViewController: MessagesViewController {
     
     @objc
     func loadMoreMessages() {
-//        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 1) {
-//            SampleData.shared.getMessages(count: 20) { messages in
-//                DispatchQueue.main.async {
-//                    self.messageList.insert(contentsOf: messages, at: 0)
-//                    self.messagesCollectionView.reloadDataAndKeepOffset()
-//                    self.refreshControl.endRefreshing()
-//                }
-//            }
-//        }
+        // TODO: Setup Pagination
     }
 }
 
 // MARK: - MessagesDataSource
 extension BaseChatViewController: MessagesDataSource {
     func currentSender() -> SenderType {
-        return GMMockData.shared.currentSender
+        return GMMockData.currentSender
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
@@ -133,6 +162,8 @@ extension BaseChatViewController: MessageCellDelegate {
 // MARK: - InputBarAccessoryViewDelegate
 extension BaseChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        
+        guard let conversation = conversation else {print("Failed to send message because there is no conversation"); return}
 
         // Here we can parse for which substrings were autocompleted
         let attributedText = messageInputBar.inputTextView.attributedText!
@@ -144,7 +175,7 @@ extension BaseChatViewController: InputBarAccessoryViewDelegate {
             print("Autocompleted: `", substring, "` with context: ", context ?? [])
         }
 
-        let components = inputBar.inputTextView.components
+//        let components = inputBar.inputTextView.components
         messageInputBar.inputTextView.text = String()
         messageInputBar.invalidatePlugins()
 
@@ -153,13 +184,12 @@ extension BaseChatViewController: InputBarAccessoryViewDelegate {
         messageInputBar.inputTextView.placeholder = "Sending..."
         
         // TODO: Setup networking task
-        DispatchQueue.global(qos: .default).async {
-            // fake send request task
-            sleep(1)
-            DispatchQueue.main.async { [weak self] in
+        let message = Message(text: text, user: GMMockData.currentSender, conversationID: conversation.conversationID)
+        
+        FirebaseManager.sendMessage(converstaionID: conversation.conversationID, message: message) {
+            DispatchQueue.main.async {  [weak self] in
                 self?.messageInputBar.sendButton.stopAnimating()
                 self?.messageInputBar.inputTextView.placeholder = "Send Message"
-                self?.insertMessages(components)
                 self?.messagesCollectionView.scrollToBottom(animated: true)
             }
         }
@@ -175,7 +205,6 @@ extension BaseChatViewController: InputBarAccessoryViewDelegate {
     }
     
     func insertMessage(_ message: Message) {
-        messageList.append(message)
         // Reload last section to update header/footer labels and insert a new one
         messagesCollectionView.performBatchUpdates({
             messagesCollectionView.insertSections([messageList.count - 1])
@@ -189,14 +218,14 @@ extension BaseChatViewController: InputBarAccessoryViewDelegate {
         })
     }
 
-    private func insertMessages(_ data: [Any]) {
-        for component in data {
-            let user = GMMockData.shared.currentSender
-            if let str = component as? String {
-                let message = Message(text: str, user: user)
-                insertMessage(message)
-            }
-        }
-    }
+//    private func insertMessages(_ data: [Any]) {
+//        for component in data {
+//            let user = GMMockData.shared.currentSender
+//            if let str = component as? String {
+//                let message = Message(text: str, user: user)
+//                insertMessage(message)
+//            }
+//        }
+//    }
 
 }

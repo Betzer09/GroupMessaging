@@ -50,8 +50,7 @@ extension ChatViewController: MessagesDisplayDelegate {
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         
-        // TODO: Configure to take in sender fullname
-        let avatar = Avatar(image: nil, initials: "AB")
+        let avatar = Avatar(image: nil, initials: GMMockData.shared.matchSender(message.sender.senderId).initals)
         avatarView.set(avatar: avatar)
     }
     
