@@ -54,16 +54,7 @@ extension ChatViewController: MessagesDisplayDelegate {
         avatarView.set(avatar: avatar)
     }
     
-    func configureAccessoryView(_ accessoryView: UIView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        let accessaryView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 10))
-        return accessoryView
-    }
-    
-    func cellBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        return NSAttributedString(string: "I was sent")
-    }
-    
-    
+
     
     // MARK: - Location Messages
     

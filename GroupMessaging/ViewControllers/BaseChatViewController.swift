@@ -34,7 +34,6 @@ class BaseChatViewController: MessagesViewController {
         configureMessageCollectionView()
         configureMessageInputBar()
         
-//        loadFirstMessages()
         loadIncomingMessages()
     }
 
@@ -91,6 +90,14 @@ class BaseChatViewController: MessagesViewController {
     func loadMoreMessages() {
         // TODO: Setup Pagination
         refreshControl.endRefreshing()
+    }
+    
+    func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        return NSAttributedString(string: message.sentDate.toPrettyString(), attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)])
+    }
+    
+    func cellBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+         return NSAttributedString(string: "Read", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10), NSAttributedString.Key.foregroundColor: UIColor.darkGray])
     }
 }
 
