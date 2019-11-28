@@ -60,23 +60,6 @@ class FirebaseManager {
         })
     }
     
-//    static func fetchConversationMessages(initalIndex: Int, limit: Int,
-//                                          conversationID: String, completion: @escaping(_ response: [[String: Any]]) -> ()) {
-//        conversationsRef?.child(conversationID).child("messages")
-//            .queryOrdered(byChild: "sent_date")
-//            .observeSingleEvent(of: .value, with: { (snapshot) in
-//            guard let data = snapshot.value as? [String: Any] else {
-//                completion([[:]])
-//                return
-//            }
-//
-//            let messages = data.compactMap({ $0.value as? [String: Any]})
-//
-//            completion(messages)
-//
-//        })
-//    }
-    
     static func observeNewMessages(conversationID: String, completion: @escaping(_ response: [[String: Any]]) -> ()) {
         conversationsRef?.child(conversationID).child("messages")
             .observe(.value, with: { (snapshot) in

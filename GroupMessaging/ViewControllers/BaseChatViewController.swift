@@ -37,23 +37,7 @@ class BaseChatViewController: MessagesViewController {
 //        loadFirstMessages()
         loadIncomingMessages()
     }
-    
-//    func loadFirstMessages() {
-//        FirebaseManager.fetchConversationMessages(initalIndex: 0, limit: 20, conversationID: conversation.conversationID) { [weak self] (response) in
-//
-//            guard let strongSelf = self else {return}
-//
-//            var allmessages = [Message]()
-//            for messageJson in response {
-//                guard let messsage = Message(dict: messageJson) else {continue}
-//                allmessages.append(messsage)
-//            }
-//
-//            strongSelf.messageList = allmessages
-//            strongSelf.messagesCollectionView.reloadData()
-//            strongSelf.messagesCollectionView.scrollToBottom()
-//        }
-//    }
+
      
     /**
      Handles new incomming messages

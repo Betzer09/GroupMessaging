@@ -10,5 +10,5 @@ import Foundation
 import UIKit
 
 extension UIColor {
-    static let primaryColor = UIColor(red: 69/255, green: 193/255, blue: 89/255, alpha: 1)
+    static let primaryColor = UIColor(red: 0/255, green: 111/255, blue: 191/255, alpha: 1)
 }
