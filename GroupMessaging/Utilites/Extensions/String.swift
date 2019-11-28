@@ -12,7 +12,6 @@ extension String {
     /// converts a string to date
     func toDate() -> Date {
         let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "MMM d, h:mm a"
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         
         return dateFormatter.date(from: self)!

@@ -8,12 +8,16 @@
 
 import Foundation
 import FirebaseDatabase
+import UIKit
 
 
 class FirebaseManager {
     
     // MARK: - Database References
     private static let ref = Database.database().reference()
+    
+    private static var lastMesseageObserver: UInt?
+    private(set) static var lastQueryLimit: UInt = 20
     
     // MARK: - DBKeys
     struct DBKeys {
@@ -60,15 +64,36 @@ class FirebaseManager {
         })
     }
     
-    static func observeNewMessages(conversationID: String, completion: @escaping(_ response: [[String: Any]]) -> ()) {
-        conversationsRef?.child(conversationID).child("messages")
-            .observe(.value, with: { (snapshot) in
+    static func observeNewMessages(conversationID: String, queryLimit: UInt = lastQueryLimit , completion: @escaping(_ response: [[String: Any]]) -> ()) {
+        let ref = conversationsRef?.child(conversationID).child("messages")
+            .queryOrdered(byChild:"sent_date")
+            
+        
+        guard let unwrappedRef = ref else {return}
+        
+        // Remove the last reference we had
+        if let lastMesseageObserver = lastMesseageObserver {
+            print("Removing old observer")
+            unwrappedRef.queryLimited(toLast: lastQueryLimit).removeObserver(withHandle: lastMesseageObserver)
+        }
+        
+        // Assign the new query limit as the last query limit
+        self.lastQueryLimit = queryLimit
+        
+        // Create new observer
+        lastMesseageObserver = unwrappedRef.queryLimited(toLast: queryLimit).observe(.value, with: { (snapshot) in
             guard let data = snapshot.value as? [String: Any] else {
+                print("Failed to load messages and will return no messages")
                 completion([[:]])
                 return
             }
             
             let messages = data.compactMap({ $0.value as? [String: Any]})
+            
+            // If our query limit is more then the amount of messages we available assign that amount to the query limit
+            if lastQueryLimit > messages.count {
+                self.lastQueryLimit = UInt(messages.count)
+            }
             
             completion(messages)
         })

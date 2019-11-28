@@ -13,8 +13,8 @@ class GMMockData {
     
     // MARK: - SampleData
     
-    static let testSender1  = GMUser(firebaseID: "SomeRandomID2", fullname: "Alex Ward")
-    
+//    static let testSender1  = GMUser(firebaseID: "SomeRandomID2", fullname: "Alex Ward")
+    static let testSender2 = GMUser(firebaseID: "SomeRandomID3", fullname: "Johnny Cash")
     static let testSender3 = GMUser(firebaseID: "SomeRandomID4", fullname: "Martha Ward")
     static let testSender4 = GMUser(firebaseID: "SomeRandomID5", fullname: "Sophia Mes")
     static let testSender5 = GMUser(firebaseID: "SomeRandomID6", fullname: "Brooke Stalls")
@@ -25,16 +25,16 @@ class GMMockData {
     
 
     // Simulator
-    static let currentSender = GMUser(firebaseID: "SomeRandomID3", fullname: "Johnny Cash")
-    static let testSender2 = GMUser(firebaseID: "SomeRandomID1", fullname: "Austin Betzer")
+//    static let currentSender = GMUser(firebaseID: "SomeRandomID3", fullname: "Johnny Cash")
+//    static let testSender1 = GMUser(firebaseID: "SomeRandomID1", fullname: "Austin Betzer")
     
     // iPhone 8 Test
 //    static let currentSender = GMUser(firebaseID: "SomeRandomID2", fullname: "Alex Ward")
 //    static let testSender1 = GMUser(firebaseID: "SomeRandomID1", fullname: "Austin Betzer")
     
     // iPhone 10 Test
-//    static let testSender1 = GMUser(firebaseID: "SomeRandomID2", fullname: "Alex Ward")
-//    static let currentSender = GMUser(firebaseID: "SomeRandomID1", fullname: "Austin Betzer")
+    static let testSender1 = GMUser(firebaseID: "SomeRandomID2", fullname: "Alex Ward")
+    static let currentSender = GMUser(firebaseID: "SomeRandomID1", fullname: "Austin Betzer")
     
     private let usersData = [
     testSender1,

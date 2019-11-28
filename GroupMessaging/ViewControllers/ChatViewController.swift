@@ -11,10 +11,16 @@ import MessageKit
 import MapKit
 
 final class ChatViewController : BaseChatViewController {
+    
+    // MARK: - Properties
     override func configureMessageCollectionView() {
         super.configureMessageCollectionView()
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+    }
+    
+    deinit {
+        print("*********** DEINIT ************")
     }
 }
 

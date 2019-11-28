@@ -34,28 +34,34 @@ class BaseChatViewController: MessagesViewController {
         configureMessageCollectionView()
         configureMessageInputBar()
         
-        loadIncomingMessages()
+        loadIncomingMessages() { [weak self] in
+            guard let strongSelf = self else {return}
+            // Scroll to bottom on inital load
+            strongSelf.messagesCollectionView.scrollToBottom()
+        }
     }
 
+    deinit {
+        print("**************** REALLY DEINIT ************************")
+    }
      
     /**
      Handles new incomming messages
      */
-    func loadIncomingMessages() {
-        FirebaseManager.observeNewMessages(conversationID: conversation.conversationID) { [weak self] (response) in
+    func loadIncomingMessages(limit: UInt = FirebaseManager.lastQueryLimit, completion: @escaping() -> () = {}) {
+        FirebaseManager.observeNewMessages(conversationID: conversation.conversationID, queryLimit: limit) { [weak self] (response) in
             guard let strongSelf = self else {return}
             
             var allmessages = [Message]()
             for messageJson in response {
                 guard let messsage = Message(dict: messageJson) else {continue}
-                // Don't reload current user's message
                 allmessages.append(messsage)
             }
             
             let sortedMessages = allmessages.sorted(by: { $0.sentDate < $1.sentDate })
             strongSelf.messageList = sortedMessages
             strongSelf.messagesCollectionView.reloadData()
-            strongSelf.messagesCollectionView.scrollToBottom()
+            completion()
         }
     }
     
@@ -88,8 +94,14 @@ class BaseChatViewController: MessagesViewController {
     
     @objc
     func loadMoreMessages() {
-        // TODO: Setup Pagination
-        refreshControl.endRefreshing()
+        
+        let newLimit = FirebaseManager.lastQueryLimit + 20
+        
+        loadIncomingMessages(limit: newLimit) { [weak self] in
+            guard let strongSelf = self else {return}
+            print("Finished reloading data with new limit of: \(FirebaseManager.lastQueryLimit)")
+            strongSelf.refreshControl.endRefreshing()
+        }
     }
     
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
